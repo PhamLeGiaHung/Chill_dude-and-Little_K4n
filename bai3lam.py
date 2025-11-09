@@ -1,5 +1,6 @@
 from guizero import App, PushButton, Text
 import random
+import time
 # Key - value == item - chance
 loot_pool = {
     "Common":50,
@@ -20,11 +21,22 @@ def gacha_ing():
         if roll <= cummulative: # Checking if its in range
             result.value = f"You got: {item}"
             break # Stop once getting an item to prevent override data
+
+is_waiting = False
+
+def rolling():
+    global is_waiting
+    global result
+    if is_waiting:
+        result.value = "Rolling..."
+        window.after(2000, gacha_ing)
+    else:
+        is_waiting = True
         
 window = App(title = "gacha is my life")
 
 result = Text(window, text = "You got:")
 
-gacha = PushButton(window, command = gacha_ing, text = "jst go ahead you gambler")
+gacha = PushButton(window, command = rolling, text = "jst go ahead you gambler")
 
 window.display()
